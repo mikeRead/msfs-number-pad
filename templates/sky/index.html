@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/css/sky.css">
+
+    <title>MY SKY!</title>
+  </head>
+  <body style='zoom:100%'>
+   
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h1 id='code' class='text-center'></h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <div type="button" class="btn btn-dark btn-block py-3" onclick=" press(7);">7</div>
+        </div>
+        <div class="col-4">
+          <button type="button" class="btn btn-dark btn-block py-3" onclick=" press(8);">8</button>
+        </div>
+        <div class="col-4">
+          <button type="button" class="btn btn-dark btn-block py-3" onclick=" press(9);">9</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <button type="button" class="btn btn-dark btn-block py-3" onclick=" press(4);">4</button>
+        </div>
+        <div class="col-4">
+          <button type="button" class="btn btn-dark btn-block py-3" onclick=" press(5);">5</button>
+        </div>
+        <div class="col-4">
+          <button type="button" class="btn btn-dark btn-block py-3" onclick=" press(6);">6</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <button type="button" class="btn btn-dark btn-block py-3" onclick=" press(1);">1</button>
+        </div>
+        <div class="col-4">
+          <button type="button" class="btn btn-dark btn-block py-3" onclick=" press(2);">2</button>
+        </div>
+        <div class="col-4">
+          <button type="button" class="btn btn-dark btn-block py-3" onclick=" press(3);">3</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <button type="button" class="btn btn-secondary btn-block py-3"  onclick="press('.');">.</button>
+        </div>
+        <div class="col-4">
+          <button type="button" class="btn btn-dark btn-block py-3" onclick="press(0)">0</button>
+        </div>
+        <div class="col-2">
+          <button type="button" class="btn btn-secondary btn-block py-3" onclick="backCode()"><</button>
+        </div>
+        <div class="col-2">
+          <button type="button" class="btn btn-secondary btn-block py-3" onclick="clearCode()">CLR</button>
+        </div>
+       
+      </div>
+     
+      <div class="row">
+        <div class="col-5">
+          <button type="button" class="btn btn-dark darkAlt btn-block py-3" onclick="com1()">COM 1</button>
+        </div>
+        <div class="col-2">
+          <button type="button" class="btn btn-dark darkAlt btn-block py-3" onclick="comSwitch()"><-></button>
+        </div>
+        <div class="col-5">
+          <button type="button" class="btn btn-dark darkAlt btn-block py-3" onclick="com2()">COM STBY</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-5">
+          <button type="button" class="btn btn-dark darkAltInverse btn-block py-3" onclick="nav1()">NAV 1</button>
+        </div>
+        <div class="col-2">
+          <button type="button" class="btn btn-dark darkAltInverse btn-block py-3" onclick="navSwitch()"><-></button>
+        </div>
+        <div class="col-5">
+          <button type="button" class="btn btn-dark darkAltInverse btn-block py-3" onclick="nav2()">NAV STBY</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <button type="button" class="btn btn-outline-secondary btn-block py-3" onclick="altimiter()">ALT</button>
+        </div>
+        <div class="col-3">
+          <button type="button" class="btn btn-outline-secondary btn-block py-3" onclick="squawk()">SQUAWK</button>
+        </div>
+        <div class="col-3">
+          <button type="button" class="btn btn-outline-secondary btn-block py-3" onclick="navObs()">VOR</button>
+        </div>
+        <div class="col-3">
+          <button type="button" class="btn btn-outline-secondary btn-block py-3" onclick="heading()">HEADING</button>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"  crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script src="../static/js/sky.js"></script>
+   
+  </body>
+</html>

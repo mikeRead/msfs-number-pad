@@ -1,0 +1,293 @@
+<!-- 
+Skyhawk Flight Instruments (https://github.com/uw-ray/Skyhawk-Flight-Instruments)
+By Raymond Blaga (raymond.blaga@gmail.com), Edward Hanna (edward.hanna@senecacollege.ca), Pavlo Kuzhel (pavlo.kuzhel@senecacollege.ca)
+
+Forked from jQuery Flight Indicators (https://github.com/sebmatton/jQuery-Flight-Indicators)
+By Sébastien Matton (seb_matton@hotmail.com)
+
+Published under GPLv3 License.
+-->
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html lang="en" dir="ltr">
+
+<head>
+	<title>Attitude Indicator</title>
+    <script src="js/jquery-1.11.3.js"></script>
+    <script src="js/d3.min.js"></script>
+    <script src="js/jquery.flightindicators.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/flightindicators.css" />
+    <script src="js/bootstrap.min.js"></script>    
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+</head>
+
+<body>
+
+    <div class="examples text-center">
+        <div>
+            <span id="attitude"></span>
+        </div>
+		<div>
+			<button id="attitudePitchUp" class="btn btn-default" type="submit">Pitch Up</button>
+			<button id="attitudePitchDown" class="btn btn-default" type="submit">Pitch Down</button>
+		</div>
+		<div>
+			<button id="attitudeBankLeft" class="btn btn-default" type="submit">Bank Left</button>
+			<button id="attitudeBankRight" class="btn btn-default" type="submit">Bank Right</button>
+		</div>
+		<div>
+			<button id="attitudeILSLocalizer" class="btn btn-default" type="submit">Localizer Swing</button>
+			<button id="attitudeILSGlideslope" class="btn btn-default" type="submit">Glideslope Swing</button>
+			<button id="attitudeILS" class="btn btn-default" type="submit">ILS Swing</button>
+		</div>		
+    </div>
+
+	<script type="text/javascript">
+
+		var increment = 0;
+		var attitude = $.flightIndicator('#attitude', 'attitude', {roll:0, pitch:0});
+
+		function doAttitudeBankRight(){
+
+			var myInterval = setInterval(function() {
+
+				// Attitude update
+			    attitude.setRoll(increment);
+			    increment--;
+			
+				if(increment == -20){
+				clearInterval(myInterval);
+				--increment;
+
+					myInterval = setInterval(function() {
+					++increment;
+					
+					// Attitude update
+					attitude.setRoll(increment);
+
+					if(increment == 0){
+						clearInterval(myInterval);
+						$("#attitudeBankRight").attr('disabled',false);
+						$("#attitudeBankRight").text("Bank Right");
+					}
+					
+					}, 50);
+
+				}
+
+			}, 50);
+
+		}
+
+		function doAttitudeBankLeft(){
+
+			var myInterval = setInterval(function() {
+
+				// Attitude update
+			    attitude.setRoll(increment);	
+			    increment++;
+			
+				if(increment == 20){
+				clearInterval(myInterval);
+
+					myInterval = setInterval(function() {
+					--increment;
+					
+					// Attitude update
+					attitude.setRoll(increment);
+
+					if(increment == 0){
+						clearInterval(myInterval);
+						$("#attitudeBankLeft").attr('disabled',false);
+						$("#attitudeBankLeft").text("Bank Left");
+					}
+					
+					}, 50);
+
+				}
+
+			}, 50);
+
+		}
+
+		function doPitchUp(){
+
+			var myInterval = setInterval(function() {
+
+				// Attitude update
+			    attitude.setPitch(50*Math.sin(increment/20));	
+			    increment++;
+				
+				if(increment == 20){
+				clearInterval(myInterval);
+				--increment;
+					myInterval = setInterval(function() {
+					
+					--increment;
+					
+					// Attitude update
+					attitude.setPitch(50*Math.sin(increment/20));
+					
+					if(increment == 0){
+						clearInterval(myInterval);
+						$("#attitudePitchUp").attr('disabled',false);
+						$("#attitudePitchUp").text("Pitch Up");
+					}
+					
+					}, 50);
+
+				}
+
+			}, 50);
+
+		}
+
+		function doPitchDown(){
+
+			var myInterval = setInterval(function() {
+
+				// Attitude update
+			    attitude.setPitch(50*Math.sin(increment/20));
+			    increment--;
+				
+				if(increment == -20){
+				clearInterval(myInterval);
+				--increment;
+
+					myInterval = setInterval(function() {
+					++increment;
+					
+					// Attitude update
+					attitude.setPitch(50*Math.sin(increment/20));
+					
+					if(increment == 0){
+						clearInterval(myInterval);
+						$("#attitudePitchDown").attr('disabled',false);
+						$("#attitudePitchDown").text("Pitch Down");
+					}
+					
+					}, 50);
+
+				}
+
+			}, 50);
+
+		}
+
+		function swingILSLocalizer(){
+
+			var inc = 0;
+			var right = true;
+			var myInterval = setInterval(function(){ 
+
+				attitude.setILSLocalizer(inc);
+
+				if (inc > 17) right = false;
+				if (inc < -17) right = true;
+				
+				if (right === true) inc+=0.4;
+				if (right === false) inc-=0.4;
+
+			}, 50);
+
+		}
+
+		function swingILSGlideslope(){
+
+			var inc = 0;
+			var right = true;
+			var myInterval = setInterval(function(){ 
+
+				attitude.setILSGlideslope(inc);
+
+				if (inc > 17) right = false;
+				if (inc < -17) right = true;
+				
+				if (right === true) inc+=0.25;
+				if (right === false) inc-=0.25;
+
+			}, 50);
+
+		}
+
+		function swingILS(){
+
+			var inc1 = 0;
+			var inc2 = 0;
+			var myInterval = setInterval(function(){ 
+
+				attitude.setILSLocalizer(14*Math.sin(inc1/10));
+				attitude.setILSGlideslope(14*Math.sin(inc2/10));
+				inc1+=0.1;
+				inc2+=0.2;
+
+			}, 50);
+
+		}
+
+		$("#attitudeBankRight").on("click", function() {
+			$("#attitudeBankRight").attr('disabled', true);
+			$("#attitudeBankRight").text("Playing");
+			doAttitudeBankRight();
+		});
+
+		$("#attitudeBankLeft").on("click", function() {
+			$("#attitudeBankLeft").attr('disabled', true);
+			$("#attitudeBankLeft").text("Playing");	
+			doAttitudeBankLeft();
+		});
+
+		$("#attitudePitchUp").on("click", function() {
+			$("#attitudePitchUp").attr('disabled', true);
+			$("#attitudePitchUp").text("Playing");
+			doPitchUp();
+		});
+
+		$("#attitudePitchDown").on("click", function() {
+			$("#attitudePitchDown").attr('disabled', true);
+			$("#attitudePitchDown").text("Playing");
+			doPitchDown();
+		});
+
+		$("#attitudeILSLocalizer").on("click", function() {
+			$("#attitudeILSLocalizer").attr('disabled', true);
+			$("#attitudeILS").attr('disabled', true);
+			$("#attitudeILSLocalizer").text("Playing");
+			swingILSLocalizer();
+		});
+
+		$("#attitudeILSGlideslope").on("click", function() {
+			$("#attitudeILSGlideslope").attr('disabled', true);
+			$("#attitudeILS").attr('disabled', true);
+			$("#attitudeILSGlideslope").text("Playing");
+			swingILSGlideslope();
+		});
+
+		$("#attitudeILS").on("click", function() {
+			$("#attitudeILS").attr('disabled', true);
+			$("#attitudeILSLocalizer").attr('disabled', true);
+			$("#attitudeILSGlideslope").attr('disabled', true);
+			$("#attitudeILS").text("Playing");
+			swingILS();
+		});
+
+	</script>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

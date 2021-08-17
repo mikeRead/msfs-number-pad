@@ -1,0 +1,87 @@
+<!-- 
+Skyhawk Flight Instruments (https://github.com/uw-ray/Skyhawk-Flight-Instruments)
+By Raymond Blaga (raymond.blaga@gmail.com), Edward Hanna (edward.hanna@senecacollege.ca), Pavlo Kuzhel (pavlo.kuzhel@senecacollege.ca)
+
+Forked from jQuery Flight Indicators (https://github.com/sebmatton/jQuery-Flight-Indicators)
+By Sébastien Matton (seb_matton@hotmail.com)
+
+Published under GPLv3 License.
+-->
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html lang="en" dir="ltr">
+
+<head>
+    <title>Altimeter Indicator</title>
+    <script src="js/jquery-1.11.3.js"></script>
+    <script src="js/d3.min.js"></script>
+    <script src="js/jquery.flightindicators.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/flightindicators.css" />
+    <script src="js/bootstrap.min.js"></script>    
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+</head>
+
+<body>
+
+    <div class="examples text-center">
+        <div>
+            <span id="altimeter"></span>
+        </div>
+		<div>
+			<button id="altimiterButton" class="btn btn-default" type="submit">Button</button>
+        </div>
+    </div>
+
+	<script type="text/javascript">
+
+		var increment = 0;
+		var altimeter = $.flightIndicator('#altimeter', 'altimeter');
+
+		function doAltimeter(){
+
+			var myInterval = setInterval(function() {
+
+				// Altimeter update
+				altimeter.setAltitude(3*increment);
+				altimeter.setPressure(30+3*Math.sin(increment/50)/10);
+				increment++;
+				
+				if(increment == 5000){
+					clearInterval(myInterval);
+					$("#altimiterButton").attr('disabled',false);
+					$("#altimiterButton").text("Start");
+					altimeter.setAltitude(0);
+					altimeter.setPressure(0);
+				}
+
+			}, 50);
+
+		}
+
+		$("#altimiterButton").text("Start");
+		$("#altimiterButton").on("click", function() {
+			$("#altimiterButton").attr('disabled', true);
+			$("#altimiterButton").text("Playing");
+			doAltimeter();
+		});
+				
+	</script>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

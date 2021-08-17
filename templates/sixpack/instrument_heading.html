@@ -1,0 +1,88 @@
+<!-- 
+Skyhawk Flight Instruments (https://github.com/uw-ray/Skyhawk-Flight-Instruments)
+By Raymond Blaga (raymond.blaga@gmail.com), Edward Hanna (edward.hanna@senecacollege.ca), Pavlo Kuzhel (pavlo.kuzhel@senecacollege.ca)
+
+Forked from jQuery Flight Indicators (https://github.com/sebmatton/jQuery-Flight-Indicators)
+By Sébastien Matton (seb_matton@hotmail.com)
+
+Published under GPLv3 License.
+-->
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html lang="en" dir="ltr">
+
+<head>
+    <title>Heading Indicator</title>
+    <script src="js/jquery-1.11.3.js"></script>
+    <script src="js/d3.min.js"></script>
+    <script src="js/jquery.flightindicators.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/flightindicators.css" />
+    <script src="js/bootstrap.min.js"></script>    
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+</head>
+
+<body>
+
+    <div class="examples text-center">
+        <div>
+            <span id="heading"></span>
+        </div>
+		<div>
+			<button id="headingButton" class="btn btn-default" type="submit">Button</button>
+		</div>
+    </div>
+
+	<script type="text/javascript">
+
+		var increment = 0;
+		var heading = $.flightIndicator('#heading', 'heading', {heading:150, 'beacononeshow': true, 'beacontwoshow': true});
+
+		function doHeading(){
+
+			var myInterval = setInterval(function() {
+
+				$("#headingButton").text("Playing");
+			    increment++;
+				
+				// Heading update
+			    heading.setHeading(increment);
+			    heading.setBeaconOne(increment * 2, true);
+			    heading.setBeaconTwo(-increment * 3, true);
+				
+				if(increment == 157){
+				$("#headingButton").text("Start");
+				clearInterval(myInterval);
+				$("#headingButton").attr('disabled',false);
+				heading.setHeading(0);
+				}
+
+			}, 50);
+
+		}
+			
+		$("#headingButton").text("Start");
+		$("#headingButton").on("click", function() {
+			$("#headingButton").attr('disabled', true);
+			doHeading();
+		});
+				
+	</script>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

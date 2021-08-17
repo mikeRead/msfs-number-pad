@@ -1,0 +1,236 @@
+<!-- 
+Skyhawk Flight Instruments (https://github.com/uw-ray/Skyhawk-Flight-Instruments)
+By Raymond Blaga (raymond.blaga@gmail.com), Edward Hanna (edward.hanna@senecacollege.ca), Pavlo Kuzhel (pavlo.kuzhel@senecacollege.ca)
+
+Forked from jQuery Flight Indicators (https://github.com/sebmatton/jQuery-Flight-Indicators)
+By Sébastien Matton (seb_matton@hotmail.com)
+
+Published under GPLv3 License.
+-->
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html lang="en" dir="ltr">
+
+<head>
+    <title>Skyhawk Flight Instruments Dashboard</title>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="static/js/d3.min.js"></script>
+    <script src="static/js/jquery.flightindicators.js"></script>
+    <link rel="stylesheet" type="text/css" href="static/css/flightindicators.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="static/js/bootstrap.min.js"></script>    
+    <link rel="stylesheet" href="static/css/bootstrap.min.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <style>
+        body {
+            text-align: center;
+        }
+        .indicator_background_screws{
+            opacity: 60%;
+        }
+        .instraments{
+           background: rgb(0,0,0) !important;
+            background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 13%, rgba(46,46,46,1) 45%, rgba(0,0,0,1) 80%, rgba(0,0,0,1) 100%) !important; 
+        }
+        .landing{
+            position: fixed;
+            top:-55px;
+            z-index: 1000;
+            color:white;
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+            width:190px;
+            padding: 10px;
+            background-color: black;
+        }
+        .rate{
+            font-size: 150%;
+            font-weight: bold;
+            
+        }
+        .good{
+            color:rgb(85, 219, 103)
+        }
+        .ok{
+            color:rgb(219, 206, 85)
+        }
+        .poor{
+            color:rgb(219, 85, 85)
+        }
+      
+    </style>
+</head>
+
+<body>
+   
+    <div class="instruments" style='width:190px'>
+        
+        <div>
+            <div class="landing">
+                LANDING RATE
+                <div class='rate'>-172 FPM</div>
+            </div>
+            <div class="instrument" id="airspeed"></div>
+            <div class="instrument" style= "top:-35px" id="attitude"></div>
+            <div class="instrument" style="top:-70px" id="altimeter"></div>            
+
+            <div class="instrument" style="top:-105px"id="turn_coordinator"></div>
+            <div class="instrument"  style="top:-140px" id="heading"></div>
+            <div class="instrument" style="top:-175px" id="variometer"></div>
+        </div>
+    </div>
+    <a href="#" id='show'>SHOW</a>
+    <script type="text/javascript">
+
+        var settings = {
+            off_flag: false			,
+            size: 190,
+            showBox: false,
+            showScrews: false,
+            beacontwoshow:false,
+            img_directory : 'static/img/'
+        };
+
+        var increment = 0;
+        var increment_vario = 0;
+        var ball_increment = 0.5;
+        var ball_right = true;
+        var clockwise_vario = true;
+        //http://www.prepar3d.com/SDKv2/LearningCenter/utilities/variables/simulation_variables.html
+        var airspeed = $.flightIndicator('#airspeed', 'airspeed', settings);
+        var attitude = $.flightIndicator('#attitude', 'attitude', settings);
+        var altimeter = $.flightIndicator('#altimeter', 'altimeter', settings);
+        var turn_coordinator = $.flightIndicator('#turn_coordinator', 'turn_coordinator', settings);
+        var heading = $.flightIndicator('#heading', 'heading', settings);
+        var variometer = $.flightIndicator('#variometer', 'variometer', settings);
+        var onGround
+        var vSpeedNumber
+        function speed(data) {
+            console.log(data)
+            if(typeof onGround == 'undefined'){
+                onGround = data.SIM_ON_GROUND;
+            }
+           
+            if(onGround !== data.SIM_ON_GROUND && data.SIM_ON_GROUND == 1){
+                if(data.VERTICAL_SPEED < vSpeedNumber ){
+                    vSpeedNumber  = data.VERTICAL_SPEED   
+                }
+                landed(Math.round(vSpeedNumber))
+            }
+            if(data.VERTICAL_SPEED<0){
+                vSpeedNumber = data.VERTICAL_SPEED
+            }
+            onGround = data.SIM_ON_GROUND
+            vSpeed = data.VERTICAL_SPEED/100
+
+
+            // Airspeed update
+            //airspeed.setAirSpeed(80 * Math.sin(increment/10));
+            airspeed.setAirSpeed(data.AIRSPEED_INDICATE);
+
+            // Attitude update
+            attitude.setRoll((data.PLANE_BANK_DEGREES * (180/Math.PI)));
+            attitude.setPitch(data.PLANE_PITCH_DEGREES * (180/Math.PI) *-1 );
+        
+            //attitude.setILSLocalizer(15*Math.sin(increment/30));
+           // attitude.setILSGlideslope(20*Math.sin(increment/30));
+
+            // Altimeter update
+            altimeter.setAltitude(parseInt(data.ALTITUDE.replace(",",'')));
+            altimeter.setPressure(data.KOHLSMAN_SETTING_HG);
+            increment++;
+            
+            // TC update - note that the TC appears opposite the angle of the attitude indicator, as it mirrors the actual wing up/down position
+            let ball = data.TURN_COORDINATOR_BALL
+            range = 1 - -1
+            correctedStartValue = ball - -1
+            percentage = ((correctedStartValue * 100) / range)/100
+
+            turn_coordinator.setTurn(data.PLANE_BANK_DEGREES * (180/Math.PI)*-1 );
+            
+
+            turn_coordinator.setSlip(percentage);
+            
+            if (ball_increment <= 0) ball_right = true;
+            if (ball_increment >= 1) ball_right = false;
+            if (ball_right == false) ball_increment -= 0.01;
+            else ball_increment += 0.01;
+
+            // Heading update
+            headingDeg = data.HEADING_INDICATOR * (180/Math.PI)
+            headingBugDeg = data.AUTOPILOT_HEADING_LOCK_DIR
+            heading.setHeading(headingDeg);
+            heading.setBeaconTwo(headingBugDeg-headingDeg , true);
+            //VOR
+            //heading.setBeaconTwo(headingBugDeg, true);
+            
+            // // Vario update
+            // if (increment_vario > 45) clockwise_vario = false;
+            // if (increment_vario < - 45) clockwise_vario = true;
+
+            // if (clockwise_vario) increment_vario += 0.3;
+            // else increment_vario -= 0.3;
+            
+            variometer.setVario(vSpeed);
+
+        }
+        function init(){
+
+            $.getJSON( "http://localhost:5000/ui2", function( data ) {
+                speed(data)
+            })
+            .always(function(){setTimeout(init,500)})
+        }
+        init()
+
+        $('#show').on('click',function(){
+           landed(-174)
+        })
+        let clearInt;
+        landed = function(vSpeed){
+            if(vSpeed==0) return;
+            $(".rate").removeClass("good")
+            $(".rate").removeClass("ok")
+            $(".rate").removeClass("poor")
+            if(vSpeed>-50){
+                $(".rate").addClass("good");
+            }
+            else if(vSpeed>-100){
+                $(".rate").addClass("ok");
+            }
+            else{
+                $(".rate").addClass("poor");
+            }
+            
+            $(".rate").text(vSpeed+" FPM")
+            $(".landing").animate({top: "+=55px"} ,500,"linear", function() {
+                $(".landing").effect("bounce",{},300,function(){
+                    window.setTimeout(function(){
+                        $(".landing").animate({top: "-=55px"}, 200, function() {
+                            window.clearTimeout(clearInt)
+                            clearInt = window.setTimeout(function(){
+                                $(".landing").css("top","-55px")
+                            },1000)
+                            
+                        })
+                    },5000)
+                  
+                })
+                $(".rate").effect("bounce",{},1000,function(){})
+            })
+            
+            // $(".landing").slideDown( "slow", function() {
+            //     $(".landing").slideUp( "slow", function() {
+                
+            //     })
+            // })
+        }
+
+    </script>
+
+</body>
+
+</html>

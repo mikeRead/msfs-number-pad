@@ -1,0 +1,77 @@
+.btn-group.special {
+    display: flex;
+  }
+  
+  .special .btn {
+    flex: 1
+  }
+
+  .main{
+      width: 300px;
+
+  }
+
+
+
+  body,html{
+    height:100%;
+    background: rgb(38,38,38);
+    background: radial-gradient(circle, rgba(38,38,38,1) 0%, rgba(0,0,0,1) 100%);
+  }
+
+  h1{
+    color:rgb(182, 182, 182);
+    font-style: italic;
+  }
+#showRadios{
+    position: fixed;
+    bottom:0;
+    left:0;
+}
+#code{
+  height:48px !important;
+}
+#dragDiv {
+    position: absolute;
+    z-index: 9;
+    background-color:rgba(0,0,0,.2);
+    text-align: center;
+    border: 1px solid #d3d3d3;
+    display:none;
+    border-radius: 15px 15px 0 0;
+    opacity: .9;
+  }
+  
+#dragHeader {
+    padding: 10px;
+    cursor: move;
+    z-index: 10;
+    background-color: #2196F3;
+    color: #fff;
+  }
+.darkAlt{
+  background: rgb(38,38,38);
+  
+}
+.darkAltInverse{
+  background: rgb(38,38,38);
+
+}
+
+
+  .container {
+      width: 100%;
+      padding-right: 0 !important;
+      padding-left: 0 !important;
+      margin-right: auto !important;
+      margin-left: 0px !important;
+  }
+
+
+.col-1,.col-2, .col-3,.col-4,  .col-5{   
+   position: relative  !important;
+    width: 100% !important;
+    padding-right: 1px !important; 
+    padding-left: 1px !important;
+    padding-top: 2px !important;
+}
